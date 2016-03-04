@@ -23,6 +23,32 @@ class Token {
         return false;
     }
 
+    public boolean isAddOp() {
+        if (kind == T_PLUS) return true;
+        if (kind == T_MINUS) return true;
+        return false;
+    }
+    
+    public boolean isMulOp() {
+        if (kind == T_ASTR) return true;
+        if (kind == T_DIV) return true;
+        if (kind == T_MOD) return true;
+        return false;
+    }
+
+    public boolean isUnaryOp() {
+        if (kind == T_ASTR) return true;
+        if (kind == T_AMPR) return true;
+        if (kind == T_MINUS) return true;
+        return false;
+    }
+
+    public boolean isLiteral() {
+        if (kind == T_STRLIT) return true;
+        if (kind == T_NUM) return true;
+        return false;
+    }
+
     public static int identKind(String id) {
         if(id.equals("int")) return T_INT;
         if(id.equals("void")) return T_VOID;

@@ -109,7 +109,22 @@ public class Parser{
     }
 
     public ENode eNode() throws CompException {
-        return new ENode(token.line, factor());
+        // TODO bug: need to peek the token after processing first node?
+        if (peekToken().isAddOp()) {
+            return new ENode(token.line, eNode(), addOp(), tNode());
+        }
+        return new ENode(token.line, tNode());
+    }
+
+    public AddOp addOp() throws CompException {
+        if (!token.isAddOp()) throw new ParserException("Expected addop, found "+token.value+".", token.line);
+        AddOp ao = new AddOp(token.line, token);
+        getToken();
+        return ao;
+    }
+
+    public TNode tNode() throws CompException {
+        return new TNode(token.line, factor());
     }
 
     public Factor factor() throws CompException {

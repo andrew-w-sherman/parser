@@ -6,12 +6,14 @@ Statement
           Expression
             Compound Expression
               E
-                Factor
-                  Variable: e
+                T
+                  Factor
+                    Variable: e
               ==
               E
-                Factor
-                  Variable: f
+                T
+                  Factor
+                    Variable: f
         do:
           Statement
             Compound statement
@@ -24,8 +26,9 @@ Statement
                       Expression
                         Compound Expression
                           E
-                            Factor
-                              Variable: y
+                            T
+                              Factor
+                                Variable: y
                 Statement
                   Expression Statement
                     Expression
@@ -34,6 +37,7 @@ Statement
                       Expression
                         Compound Expression
                           E
-                            Factor
-                              Variable: z
+                            T
+                              Factor
+                                Variable: z
         Endwhile

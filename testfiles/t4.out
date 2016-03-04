@@ -6,20 +6,24 @@ Statement
           Expression
             Compound Expression
               E
-                Factor
-                  Variable: x
+                T
+                  Factor
+                    Variable: x
               ==
               E
-                Factor
-                  Variable: y
+                T
+                  Factor
+                    Variable: y
       Statement
         Expression Statement
           Expression
             Compound Expression
               E
-                Factor
-                  Variable: y
+                T
+                  Factor
+                    Variable: y
               !=
               E
-                Factor
-                  Variable: z
+                T
+                  Factor
+                    Variable: z

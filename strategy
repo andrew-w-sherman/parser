@@ -7,9 +7,24 @@ WHILE_STMT -> WHILE ( EXPRESSION ) STATEMENT
 EXPRESSION -> VAR = EXPRESSION | COMP_EXP
 COMP_EXP -> E RELOP E | E
 RELOP -> <= | < | == | != | > | >=
-E -> FACTOR
+E -> E ADDOP T | T
+ADDOP -> + | -
+T -> FACTOR
 FACTOR -> ( EXPRESSION ) | VAR
 VAR -> ID
+
+TreeNode E( ) {
+    TreeNode t = T(  );
+    while (IsAddOp (currentToken)) {
+        TreeNode t1 = new TreeNode();
+        t1.token = currentToken;
+        getNextToken();
+        t1.leftChild = t;
+        t1.rightChild = T();
+        t = t1;
+    }
+    return t;
+}
 
 gradually add in the expressions, then the rest of the statements, 
 then variable declarations, then function declarations, and so 

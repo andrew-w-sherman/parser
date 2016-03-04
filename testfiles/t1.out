@@ -6,5 +6,6 @@ Statement
       Expression
         Compound Expression
           E
-            Factor
-              Variable: y
+            T
+              Factor
+                Variable: y

@@ -3,7 +3,7 @@ public abstract class TreeNode {
     int type;
     int line;
     TreeNode next;
-    
+
     public abstract void printRec(int depth);
 
     public static void printDepth(int depth) {

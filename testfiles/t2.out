@@ -9,8 +9,9 @@ Statement
             Expression
               Compound Expression
                 E
-                  Factor
-                    Variable: y
+                  T
+                    Factor
+                      Variable: y
       Statement
         Expression Statement
           Expression
@@ -19,8 +20,9 @@ Statement
             Expression
               Compound Expression
                 E
-                  Factor
-                    Variable: z
+                  T
+                    Factor
+                      Variable: z
       Statement
         Expression Statement
           Expression
@@ -29,5 +31,6 @@ Statement
             Expression
               Compound Expression
                 E
-                  Factor
-                    Variable: x
+                  T
+                    Factor
+                      Variable: x

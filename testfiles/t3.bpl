@@ -1,1 +1,1 @@
-{while (e) {x; y;}}
+{while (e == f) {x = y; y = z;}}

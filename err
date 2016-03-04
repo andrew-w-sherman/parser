@@ -1,0 +1,42 @@
+ParserTests.java:16: error: cannot find symbol
+        assertEquals(root.kind, TreeNode.STATEMENT);
+                         ^
+  symbol:   variable kind
+  location: variable root of type Statement
+ParserTests.java:17: error: cannot find symbol
+        assertEquals(root.es.kind, TreeNode.EXPRESSION_STMT);
+                            ^
+  symbol:   variable kind
+  location: variable es of type ExpressionStatement
+ParserTests.java:18: error: cannot find symbol
+        assertEquals(root.es.expression.kind, TreeNode.EXPRESSION);
+                                       ^
+  symbol:   variable kind
+  location: variable expression of type Expression
+ParserTests.java:26: error: cannot find symbol
+            ParseNode root = p.parse();
+            ^
+  symbol:   class ParseNode
+  location: class ParserTests
+ParserTests.java:31: error: cannot find symbol
+        assertEquals(root.kind, TreeNode.STATEMENT);
+                     ^
+  symbol:   variable root
+  location: class ParserTests
+ParserTests.java:32: error: package root does not exist
+        assertEquals(root.cs.kind, TreeNode.COMPOUND_STMT);
+                         ^
+ParserTests.java:33: error: package root.cs does not exist
+        assertEquals(root.cs.sl.kind, TreeNode.STATEMENT_LIST);
+                            ^
+ParserTests.java:41: error: cannot find symbol
+            ParseNode root = p.parse();
+            ^
+  symbol:   class ParseNode
+  location: class ParserTests
+ParserTests.java:44: error: cannot find symbol
+            assertNotReached();
+            ^
+  symbol:   method assertNotReached()
+  location: class ParserTests
+9 errors

@@ -1,0 +1,20 @@
+Statement
+  Compound statement
+    Statement List
+      Statement
+        While:
+          Expression
+            Variable: e
+        do:
+          Statement
+            Compound statement
+              Statement List
+                Statement
+                  Expression Statement
+                    Expression
+                      Variable: x
+                Statement
+                  Expression Statement
+                    Expression
+                      Variable: y
+        Endwhile

@@ -1,0 +1,15 @@
+Statement
+  Compound statement
+    Statement List
+      Statement
+        Expression Statement
+          Expression
+            Variable: x
+      Statement
+        Expression Statement
+          Expression
+            Variable: y
+      Statement
+        Expression Statement
+          Expression
+            Variable: z

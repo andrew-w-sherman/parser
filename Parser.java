@@ -18,6 +18,8 @@ public class Parser{
         return node;
     }
 
+    // STATEMENTS!!!
+
     public Statement statement() throws CompException{
         Statement st;
         if (token.kind == Token.T_LBRACE) {
@@ -74,7 +76,16 @@ public class Parser{
         return new WhileStatement(line, ex, st);
     }
 
+    // EXPRESSIONS!!!
+
     public Expression expression() throws CompException{
+        int line = token.line;
+        if (peekToken().kind == Token.T_ASSN) {
+            Variable var = variable();
+            expect(Token.T_ASSN, "assignment"); getToken();
+            Expression ex = expression();
+            return new Expression(line, var, ex);
+        }
         return new Expression(token.line, compoundExpression());
     }
 
@@ -121,6 +132,8 @@ public class Parser{
         getToken();
         return v;
     }
+
+    // HELPER FUNCTIONS!!!
 
     void getToken() throws ScannerException {
         if (peekToken != null) {

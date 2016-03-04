@@ -1,0 +1,33 @@
+Statement
+  Compound statement
+    Statement List
+      Statement
+        Expression Statement
+          Expression
+            Variable: x
+            =
+            Expression
+              Compound Expression
+                E
+                  Factor
+                    Variable: y
+      Statement
+        Expression Statement
+          Expression
+            Variable: y
+            =
+            Expression
+              Compound Expression
+                E
+                  Factor
+                    Variable: z
+      Statement
+        Expression Statement
+          Expression
+            Variable: z
+            =
+            Expression
+              Compound Expression
+                E
+                  Factor
+                    Variable: x

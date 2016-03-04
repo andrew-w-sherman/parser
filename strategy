@@ -4,11 +4,12 @@ COMPOUND_STATEMENT -> { STATEMENT_LIST }
 STATEMENT_LIST -> STATEMENT_LIST STATEMENT | <empty>
 EXPRESSION_STMT -> EXPRESSION;
 WHILE_STMT -> WHILE ( EXPRESSION ) STATEMENT
-EXPRESSION -> <id> | COMP_EXP
+EXPRESSION -> VAR = EXPRESSION | COMP_EXP
 COMP_EXP -> E RELOP E | E
 RELOP -> <= | < | == | != | > | >=
 E -> FACTOR
-FACTOR -> ( EXPRESSION ) | <id>
+FACTOR -> ( EXPRESSION ) | VAR
+VAR -> ID
 
 gradually add in the expressions, then the rest of the statements, 
 then variable declarations, then function declarations, and so 

@@ -1,0 +1,39 @@
+Statement
+  Compound statement
+    Statement List
+      Statement
+        While:
+          Expression
+            Compound Expression
+              E
+                Factor
+                  Variable: e
+              ==
+              E
+                Factor
+                  Variable: f
+        do:
+          Statement
+            Compound statement
+              Statement List
+                Statement
+                  Expression Statement
+                    Expression
+                      Variable: x
+                      =
+                      Expression
+                        Compound Expression
+                          E
+                            Factor
+                              Variable: y
+                Statement
+                  Expression Statement
+                    Expression
+                      Variable: y
+                      =
+                      Expression
+                        Compound Expression
+                          E
+                            Factor
+                              Variable: z
+        Endwhile

@@ -19,7 +19,7 @@ ARGS -> ARG_LIST | <empty>
 ARG_LIST -> ARG_LIST , EXPRESSION | EXPRESSION #uses next
 LIT -> <string> | <int>
 
-gradually add in the expressions, then the rest of the statements, 
+added expressions, now the rest of the statements, 
 then variable declarations, then function declarations, and so 
 forth.  Try to keep the parser in a working state.  Be thorough 
 about checking and debugging each addition.  

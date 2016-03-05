@@ -33,11 +33,14 @@ public class Factor extends ExpressionNode {
         this.lit = lit;
     }
 
+    public Factor(int line, Variable var, Expression ex)
+
     public Factor(int line, Variable var) {
         this(line);
         this.var = var;
     }
 
+    // TODO this printrec is gonna be weird
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("Factor\n");

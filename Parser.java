@@ -80,12 +80,14 @@ public class Parser{
 
     public Expression expression() throws CompException{
         int line = token.line;
+        /*
         if (peekToken().kind == Token.T_ASSN) {
             Variable var = variable();
             expect(Token.T_ASSN, "assignment"); getToken();
             Expression ex = expression();
             return new Expression(line, var, ex);
         }
+        */
         return new Expression(token.line, compoundExpression());
     }
 
@@ -196,7 +198,12 @@ public class Parser{
             return new Factor(token.line, literal());
         }
         else {
-            return new Factor(line, variable());
+            Variable var = variable();
+            if (token.kind == Token.T_ASSN) {
+                getToken();
+                return new Factor(line, var, expression());
+            }
+            else return new Factor(line, var);
         }
     }
 

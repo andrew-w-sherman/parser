@@ -28,6 +28,11 @@ public class FNode extends ExpressionNode {
         this.fn = fn;
     }
 
+    public boolean isLNode() {
+        if (!negation && ptrOp == null && fact.isLNode()) return true;
+        return false;
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         if (negation) System.out.print("-");

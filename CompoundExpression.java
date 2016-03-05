@@ -16,6 +16,11 @@ public class CompoundExpression extends ExpressionNode {
         this.e2 = e2;
     }
 
+    public boolean isLNode() {
+        if (this.rel == null && e1.isLNode()) return true;
+        return false;
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("Compound Expression\n");

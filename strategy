@@ -4,8 +4,7 @@ COMPOUND_STATEMENT -> { STATEMENT_LIST }
 STATEMENT_LIST -> STATEMENT_LIST STATEMENT | <empty> #uses next
 EXPRESSION_STMT -> EXPRESSION;
 WHILE_STMT -> WHILE ( EXPRESSION ) STATEMENT
-                                            #change
-EXPRESSION -> COMP_EXP
+EXPRESSION -> COMP_EXP = EXPRESSION | COMP_EXP          #check isLNode
 VAR -> * <id> | <id> [expression] | <id>
 COMP_EXP -> E RELOP E | E
 RELOP -> <= | < | == | != | > | >=
@@ -14,8 +13,7 @@ ADDOP -> + | -
 T -> T MULOP F | F
 MULOP -> * | / | %
 F -> -F | &FACTOR | *FACTOR | FACTOR
-                                            #change
-FACTOR -> ( EXPRESSION ) | read() | FUN_CALL | LIT | VAR = EXPRESSION | VAR
+FACTOR -> ( EXPRESSION ) | read() | FUN_CALL | LIT | VAR
 FUN_CALL -> <id> ( ARGS )
 ARGS -> ARG_LIST | <empty>
 ARG_LIST -> ARG_LIST , EXPRESSION | EXPRESSION #uses next

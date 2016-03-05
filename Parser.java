@@ -80,13 +80,20 @@ public class Parser{
 
     public Expression expression() throws CompException{
         int line = token.line;
-        if (peekToken().kind == Token.T_ASSN) {
-            Variable var = variable();
-            expect(Token.T_ASSN, "assignment"); getToken();
-            Expression ex = expression();
-            return new Expression(line, var, ex);
+        CompoundExpression ce = compoundExpression();
+        if(token.kind == Token.T_ASSN) {
+            // awful ambiguity hack: fix???
+            if (ce.e1.t.f.ptrOp != null &&
+                    ce.e1.t.f.ptrOp.kind == Token.T_ASTR) {
+                ce.e1.t.f.fact.var.astr = ce.e1.t.f.ptrOp;
+                ce.e1.t.f.ptrOp = null;
+            }
+            expect(ce.isLNode(), "mutable reference");
+            getToken();
+            // this is weird, maybe I want to just save the ce
+            return new Expression(line, ce.e1.t.f.fact.var, expression());
         }
-        return new Expression(token.line, compoundExpression());
+        else return new Expression(line, ce);
     }
 
     public Variable variable() throws CompException {
@@ -272,4 +279,5 @@ public class Parser{
             throw new ParserException("Found " + token.value + " expected " + thingExpected + ".", token.line);
         }
     }
+
 }

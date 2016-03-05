@@ -38,6 +38,11 @@ public class Factor extends ExpressionNode {
         this.var = var;
     }
 
+    public boolean isLNode() {
+        if (var != null) return true;
+        return false;
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("Factor\n");

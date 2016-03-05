@@ -1,6 +1,6 @@
 #!/bin/sh
 
-for n in 1 2
+for n in 1 2 3
 do
     java Test testfiles/t$n.bpl > testfiles/t$n.temp
     diff testfiles/t$n.out testfiles/t$n.temp

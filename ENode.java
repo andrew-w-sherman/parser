@@ -21,6 +21,11 @@ public class ENode extends ExpressionNode {
         this.t = t;
     }
 
+    public boolean isLNode() {
+        if (this.add == null && t.isLNode()) return true;
+        return false;
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("E\n");

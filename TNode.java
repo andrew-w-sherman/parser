@@ -21,6 +21,11 @@ public class TNode extends ExpressionNode {
         this.f = f;
     }
 
+    public boolean isLNode() {
+        if (mul == null && f.isLNode()) return true;
+        return false;
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("T\n");

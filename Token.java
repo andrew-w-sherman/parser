@@ -36,14 +36,13 @@ class Token {
         return false;
     }
 
-    public boolean isUnaryOp() {
+    public boolean isPointerOp() {
         if (kind == T_ASTR) return true;
         if (kind == T_AMPR) return true;
-        if (kind == T_MINUS) return true;
         return false;
     }
 
-    public boolean isLiteral() {
+    public boolean isLit() {
         if (kind == T_STRLIT) return true;
         if (kind == T_NUM) return true;
         return false;

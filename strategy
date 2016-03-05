@@ -1,32 +1,25 @@
 PROGRAM -> STATEMENT
 STATEMENT -> EXPRESSION_STMT | COMPOUND_STATEMENT | WHILE_STMT
 COMPOUND_STATEMENT -> { STATEMENT_LIST }
-STATEMENT_LIST -> STATEMENT_LIST STATEMENT | <empty>
+STATEMENT_LIST -> STATEMENT_LIST STATEMENT | <empty> #uses next
 EXPRESSION_STMT -> EXPRESSION;
 WHILE_STMT -> WHILE ( EXPRESSION ) STATEMENT
-EXPRESSION -> VAR = EXPRESSION | COMP_EXP
+                                            #change
+EXPRESSION -> COMP_EXP
+VAR -> * <id> | <id> [expression] | <id>
 COMP_EXP -> E RELOP E | E
 RELOP -> <= | < | == | != | > | >=
 E -> E ADDOP T | T
 ADDOP -> + | -
 T -> T MULOP F | F
 MULOP -> * | / | %
-F -> FACTOR
-FACTOR -> ( EXPRESSION ) | VAR
-VAR -> ID
-
-TreeNode E( ) {
-    TreeNode t = T(  );
-    while (IsAddOp (currentToken)) {
-        TreeNode t1 = new TreeNode();
-        t1.token = currentToken;
-        getNextToken();
-        t1.leftChild = t;
-        t1.rightChild = T();
-        t = t1;
-    }
-    return t;
-}
+F -> -F | &FACTOR | *FACTOR | FACTOR
+                                            #change
+FACTOR -> ( EXPRESSION ) | read() | FUN_CALL | LIT | VAR = EXPRESSION | VAR
+FUN_CALL -> <id> ( ARGS )
+ARGS -> ARG_LIST | <empty>
+ARG_LIST -> ARG_LIST , EXPRESSION | EXPRESSION #uses next
+LIT -> <string> | <int>
 
 gradually add in the expressions, then the rest of the statements, 
 then variable declarations, then function declarations, and so 

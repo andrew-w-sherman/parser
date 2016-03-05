@@ -46,7 +46,7 @@ public class Parser{
         }
         int line = token.line;
         Statement head;
-        TreeNode sn;
+        Statement sn;
         head = statement();
         sn = head;
         while (token.kind != Token.T_RBRACE) {
@@ -89,20 +89,39 @@ public class Parser{
         return new Expression(token.line, compoundExpression());
     }
 
+    public Variable variable() throws CompException {
+        if (token.kind == Token.T_ASTR) {
+            Token astr = token; getToken();
+            expect(Token.T_IDEN, "id for pointer");
+            return new Variable(astr.line, astr, token);
+        }
+        else if (peekToken().kind == Token.T_LBRACK) {
+            expect(Token.T_IDEN, "id for array ref");
+            Token name = token; getToken();
+            expect(Token.T_LBRACK, "lbrack for array ref"); getToken();
+            Expression ex = expression();
+            expect(Token.T_RBRACK, "rbrack for array ref"); getToken();
+            return new Variable(name.line, name, ex);
+        }
+        expect(Token.T_IDEN, "identifier for var ref");
+        Variable v = new Variable(token.line, token);
+        getToken();
+        return v;
+    }
+
     public CompoundExpression compoundExpression() throws CompException {
         int line = token.line;
-        CompoundExpression ce;
-        if (peekToken().isRelOp()) {
-            ce = new CompoundExpression(line, eNode(), relOp(), eNode());
+        ENode e1 = eNode();
+        if (token.isRelOp()) {
+            return new CompoundExpression(line, e1, relOp(), eNode());
         }
         else {
-            ce = new CompoundExpression(line, eNode());
+            return new CompoundExpression(line, e1);
         }
-        return ce;
     }
 
     public RelOp relOp() throws CompException {
-        if (!token.isRelOp()) throw new ParserException("Expected relop, found "+token.value+".", token.line);
+        expect(token.isRelOp(), "rel op");
         RelOp ro = new RelOp(token.line, token);
         getToken();
         return ro;
@@ -118,7 +137,7 @@ public class Parser{
     }
 
     public AddOp addOp() throws CompException {
-        if (!token.isAddOp()) throw new ParserException("Expected addop, found "+token.value+".", token.line);
+        expect(token.isAddOp(), "add op");
         AddOp ao = new AddOp(token.line, token);
         getToken();
         return ao;
@@ -134,13 +153,23 @@ public class Parser{
     }
 
     public MulOp mulOp() throws CompException {
-        if (!token.isMulOp()) throw new ParserException("Expected mulop, found "+token.value+".", token.line);
+        expect(token.isMulOp(), "mulop");
         MulOp mo = new MulOp(token.line, token);
         getToken();
         return mo;
     }
 
     public FNode fNode() throws CompException {
+        if (token.isPointerOp()) {
+            Token ptr = token;
+            getToken();
+            return new FNode(ptr.line, ptr, factor());
+        }
+        if (token.kind == Token.T_MINUS) {
+            int line = token.line;
+            getToken();
+            return new FNode(line, fNode());
+        }
         return new FNode(token.line, factor());
     }
 
@@ -153,16 +182,58 @@ public class Parser{
             getToken();
             return fact;
         }
+        else if (token.kind == Token.T_READ) {
+            Token read = token;
+            getToken(); expect(Token.T_LPAREN, "(");
+            getToken(); expect(Token.T_RPAREN, ")");
+            getToken();
+            return new Factor(read.line, read);
+        }
+        else if (peekToken().kind == Token.T_LPAREN) {
+            return new Factor(token.line, functionCall());
+        }
+        else if (token.isLit()) {
+            return new Factor(token.line, literal());
+        }
         else {
             return new Factor(line, variable());
         }
     }
 
-    public Variable variable() throws CompException {
+    public FunctionCall functionCall() throws CompException {
         expect(Token.T_IDEN, "identifier");
-        Variable v = new Variable(token.line, token.value);
+        Token name = token; getToken();
+        expect(Token.T_LPAREN, "arg list open paren"); getToken();
+        FunctionCall fc = new FunctionCall(name.line, name, arguments());
+        expect(Token.T_RPAREN, "arg list close paren"); getToken();
+        return fc;
+    } 
+
+    public Arguments arguments() throws CompException {
+        if (token.kind == Token.T_RPAREN)
+            return new Arguments(token.line);
+        return new Arguments(token.line, argumentList());
+    }
+
+    public ArgumentList argumentList() throws CompException {
+        int line = token.line;
+        Expression head;
+        Expression en;
+        head = expression();
+        en = head;
+        while (token.kind != Token.T_RPAREN) {
+            expect(Token.T_COMMA, ","); getToken();
+            en.next = expression();
+            en = en.next;
+        }
+        return new ArgumentList(line, head);
+    }
+
+    public Literal literal() throws CompException {
+        expect(token.isLit(), "literal");
+        Literal lit = new Literal(token.line, token);
         getToken();
-        return v;
+        return lit;
     }
 
     // HELPER FUNCTIONS!!!
@@ -193,6 +264,12 @@ public class Parser{
         if (tokenKind != token.kind) {
             throw new ParserException("Found " + token.value + " expected "
                     + thingExpected + ".", token.line);
+        }
+    }
+
+    void expect (boolean expectedTrue, String thingExpected) throws ParserException {
+        if (!expectedTrue) {
+            throw new ParserException("Found " + token.value + " expected " + thingExpected + ".", token.line);
         }
     }
 }

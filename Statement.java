@@ -4,6 +4,8 @@ public class Statement extends StatementNode {
     public CompoundStatement cs;
     public WhileStatement ws;
 
+    public Statement next;
+
     public Statement(int line, ExpressionStatement child) {
         this.line = line;
         this.type = STATEMENT;

@@ -4,6 +4,8 @@ public class Expression extends ExpressionNode {
     public Expression ex;
     public CompoundExpression ce;
 
+    public Expression next;
+
     public Expression(int line) {
         this.line = line;
         this.type = EXPRESSION;

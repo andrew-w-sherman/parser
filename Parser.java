@@ -109,11 +109,12 @@ public class Parser{
     }
 
     public ENode eNode() throws CompException {
-        // TODO bug: need to peek the token after processing first node?
-        if (peekToken().isAddOp()) {
-            return new ENode(token.line, eNode(), addOp(), tNode());
+        ENode root = new ENode(token.line, tNode());
+        while (token.isAddOp()) {
+            ENode newroot = new ENode(token.line, root, addOp(), tNode());
+            root = newroot;
         }
-        return new ENode(token.line, tNode());
+        return root;
     }
 
     public AddOp addOp() throws CompException {

@@ -1,29 +1,28 @@
 Statement
-  Compound statement
-    Statement List
-      Statement
-        Expression Statement
-          Expression
-            Compound Expression
+  Expression Statement
+    Expression
+      Compound Expression
+        E
+          E
+            E
               E
-                T
-                  Factor
-                    Variable: x
-              ==
-              E
-                T
-                  Factor
-                    Variable: y
-      Statement
-        Expression Statement
-          Expression
-            Compound Expression
-              E
-                T
-                  Factor
-                    Variable: y
-              !=
-              E
+                E
+                  T
+                    Factor
+                      Variable: x
+                -
                 T
                   Factor
                     Variable: z
+              -
+              T
+                Factor
+                  Variable: d
+            +
+            T
+              Factor
+                Variable: s
+          +
+          T
+            Factor
+              Variable: e

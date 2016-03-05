@@ -9,7 +9,9 @@ COMP_EXP -> E RELOP E | E
 RELOP -> <= | < | == | != | > | >=
 E -> E ADDOP T | T
 ADDOP -> + | -
-T -> FACTOR
+T -> T MULOP F | F
+MULOP -> * | / | %
+F -> FACTOR
 FACTOR -> ( EXPRESSION ) | VAR
 VAR -> ID
 

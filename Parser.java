@@ -125,7 +125,23 @@ public class Parser{
     }
 
     public TNode tNode() throws CompException {
-        return new TNode(token.line, factor());
+        TNode root = new TNode(token.line, fNode());
+        while (token.isMulOp()) {
+            TNode newroot = new TNode(token.line, root, mulOp(), fNode());
+            root = newroot;
+        }
+        return root;
+    }
+
+    public MulOp mulOp() throws CompException {
+        if (!token.isMulOp()) throw new ParserException("Expected mulop, found "+token.value+".", token.line);
+        MulOp mo = new MulOp(token.line, token);
+        getToken();
+        return mo;
+    }
+
+    public FNode fNode() throws CompException {
+        return new FNode(token.line, factor());
     }
 
     public Factor factor() throws CompException {

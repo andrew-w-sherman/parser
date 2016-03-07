@@ -4,6 +4,7 @@ public class VariableDeclaration extends DeclarationNode {
     public boolean isPtr;
     public Token name;
     public Integer size = null;
+    public VariableDeclaration next;
 
     public VariableDeclaration(int line, TypeSpecifier ts, Token name) {
         this.line = line;

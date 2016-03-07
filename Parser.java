@@ -161,12 +161,27 @@ public class Parser{
     }
 
     public CompoundStatement compoundStatement() throws CompException {
-        expect(Token.T_LBRACE, "left brace");
-        getToken();
-        CompoundStatement cs = new CompoundStatement(token.line, statementList());
-        expect(Token.T_RBRACE, "right brace");
-        getToken();
+        expect(Token.T_LBRACE, "left brace"); getToken();
+        LocalDeclarations ld = localDeclarations();
+        CompoundStatement cs = new CompoundStatement(token.line, ld, statementList());
+        expect(Token.T_RBRACE, "right brace"); getToken();
         return cs;
+    }
+
+    public LocalDeclarations localDeclarations() throws CompException {
+        if (!token.isParamType()) {
+            return null;
+        }
+        int line = token.line;
+        VariableDeclaration head;
+        VariableDeclaration vd;
+        head = variableDeclaration();
+        vd = head;
+        while (token.isParamType()) {
+            vd.next = variableDeclaration();
+            vd = vd.next;
+        }
+        return new LocalDeclarations(line, head);
     }
 
     public StatementList statementList() throws CompException {

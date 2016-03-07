@@ -2,13 +2,13 @@ PROGRAM -> DECLARATION_LIST
 DECLARATION_LIST -> DECLARATION_LIST DECLARATION | DECLARATION #uses next
 DECLARATION -> VAR_DEC | FUN_DEC
 VAR_DEC -> TYPE_SPECIFIER < id> ; | TYPE_SPECIFIER *<id> ; |  TYPE_SPECIFIER <id>[ <num>  ] ;
-
 TYPE_SPECIFIER -> int | void | string
 FUN_DEC -> TYPE_SPECIFIER <id> ( PARAMS ) COMPOUND_STMT
 PARAMS -> void | PARAM_LIST
 PARAM_LIST -> PARAM_LIST , PARAM |  PARAM   #uses next
 PARAM ->  TYPE_SPECIFIER  <id> |  TYPE_SPECIFIER * < id >  |TYPE_SPECIFIER <id>[   ] # make sure they aren't void
-COMPOUND_STATEMENT -> { STATEMENT_LIST }
+COMPOUND_STATEMENT -> { LOCAL_DECS STATEMENT_LIST }
+LOCAL_DECS -> LOCAL_DECS VAR_DEC | <empty> #uses next
 STATEMENT_LIST -> STATEMENT_LIST STATEMENT | <empty> #uses next
 STATEMENT -> EXPRESSION_STMT | COMPOUND_STATEMENT | IF_STMT | WHILE_STMT | RETURN_STMT | WRITE_STMT
 EXPRESSION_STMT -> EXPRESSION;
@@ -30,60 +30,3 @@ FUN_CALL -> <id> ( ARGS )
 ARGS -> ARG_LIST | <empty>
 ARG_LIST -> ARG_LIST , EXPRESSION | EXPRESSION #uses next
 LIT -> <string> | <int>
-
-added expressions, now the rest of the statements, 
-then variable declarations, then function declarations, and so 
-forth.  Try to keep the parser in a working state.  Be thorough 
-about checking and debugging each addition.  
-Each time you add a new rule to the grammar you 
-are parsing, you need to add a new kind of tree 
-node to hold the data for that rule.
-
-WHILE_STMT -> while ( EXPRESSION  ) STATEMENT
-For this you need a tree node that I call a 
-While_Node.  It  has two children: one that holds 
-the condition (returned by EXPRESSION()) and one 
-that holds the body (returned by STATEMENT()).
-
-declaration node, e.g., has a next pointer
-program in bpl is a list of declarations, so all DEC
-nodes have next field
-VAR_DEC, FUN_DEC, ARRAY_DEC
-
-var dec needs string for name, string or token for type
-boolean isPointer
-
-fun dec needs string for name, token or string for
-return type (int, void, or string)
-DEC node for params
-compound statement node for the body
-
-array dec subclasses var dec and adds an integer for size
-
-expressions also all have a next field
-(actually, next can be part of TreeNode)
-INT_VALUE (int literal)
-STRING_VALUE (string literal)
-VARIABLE (a var)
-FUN_CALL
-READ_EXP
-ADDRESS_EXP
-DEREF_EXP
-
-if ( myScanner.nextToken.kind != T_WHILE) 
-    throw new ParserException(myScanner.currentToken.lineNumber,
-        "Bad while statement);
-else {
-    getNextToken();
-    if ( myScanner.currentToken.kind != T_LPAREN)
-        throw new ParserException ( myScanner.nextToken.lineNumber,
-            "missing left parenthesis");
-    else { 
-        getNextToken();
-        ExpressionNode e = Expression();
-        ...
-    }
-
-}")
-
-expect( int tokenKind, String message );

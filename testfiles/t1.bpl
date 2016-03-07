@@ -1,4 +1,5 @@
-while ( t * -f >= &p + -u * v ) {
-    a = b;
-    c = d + fdsjkl;
+void main(void) {
+    while ( thing ) {
+        otherThing();
+    }
 }

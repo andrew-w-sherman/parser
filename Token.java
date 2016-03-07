@@ -48,6 +48,19 @@ class Token {
         return false;
     }
 
+    public boolean isTypeSpec() {
+        if (kind == T_VOID) return true;
+        if (kind == T_INT) return true;
+        if (kind == T_STRING) return true;
+        return false;
+    }
+
+    public boolean isParamType() {
+        if (kind == T_INT) return true;
+        if (kind == T_STRING) return true;
+        return false;
+    }
+
     public static int identKind(String id) {
         if(id.equals("int")) return T_INT;
         if(id.equals("void")) return T_VOID;

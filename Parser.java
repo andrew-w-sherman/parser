@@ -3,6 +3,7 @@ public class Parser{
     Scanner sc;
     Token token;
     Token peekToken;
+    Token doublePeek;     // love it
 
     public Parser(String inFile) throws ScannerException {
         try {
@@ -10,12 +11,77 @@ public class Parser{
         } catch (ScannerException e) {throw e;}
     }
 
-    public Statement parse() throws CompException{
+    public FunctionDeclaration parse() throws CompException{
         getToken();
-        Statement node = statement();
+        FunctionDeclaration node = functionDeclaration();
         getToken();
         expect(Token.T_EOF, "end of file");
         return node;
+    }
+
+    // DECLARATIONS!!!
+    
+    public TypeSpecifier typeSpecifier() throws CompException {
+        expect(token.isTypeSpec(), "type specifier");
+        Token type  = token;
+        getToken();
+        return new TypeSpecifier(type.line, type);
+    }
+
+    public FunctionDeclaration functionDeclaration() throws CompException {
+        int line = token.line;
+        TypeSpecifier ts = typeSpecifier();
+        Token name = token; getToken();
+        expect(Token.T_LPAREN, "( to open function params"); getToken();
+        Parameters params = parameters();
+        expect(Token.T_RPAREN, ") to open function params"); getToken();
+        CompoundStatement cs = compoundStatement();
+        return new FunctionDeclaration(line, ts, name, params, cs);
+    }
+
+    public Parameters parameters() throws CompException {
+        int line = token.line;
+        if (token.kind == Token.T_VOID) {
+            getToken();
+            return new Parameters(line);
+        }
+        else
+            return new Parameters(line, parameterList());
+    }
+
+    public ParameterList parameterList() throws CompException {
+        int line = token.line;
+        Parameter head;
+        Parameter param;
+        head = parameter();
+        param = head;
+        while (token.kind != Token.T_RPAREN) {
+            expect(Token.T_COMMA, ","); getToken();
+            param.next = parameter();
+            param = param.next;
+        }
+        return new ParameterList(line, head);
+    }
+
+    public Parameter parameter() throws CompException {
+        int line = token.line;
+        expect(token.isParamType(), "non-void param type");
+        TypeSpecifier ts = typeSpecifier();
+        if (token.kind == Token.T_ASTR) {
+            Token ptr = token; getToken();
+            expect(Token.T_IDEN, "identifier for pointer param");
+            Token name = token; getToken();
+            return new Parameter(line, ts, ptr, name);
+        }
+        expect(Token.T_IDEN, "identifier for parameter");
+        Token name = token; getToken();
+        if (token.kind == Token.T_LBRACK) {
+            expect(Token.T_LBRACK, "["); getToken();
+            expect(Token.T_RBRACK, "]"); getToken();
+            boolean array = true;
+            return new Parameter(line, ts, name, array);
+        }
+        else return new Parameter(line, ts, name);
     }
 
     // STATEMENTS!!!
@@ -306,7 +372,8 @@ public class Parser{
     void getToken() throws ScannerException {
         if (peekToken != null) {
             token = peekToken;
-            peekToken = null;
+            peekToken = doublePeek;
+            doublePeek = null;
             return;
         }
         try {
@@ -318,11 +385,24 @@ public class Parser{
     // returns the token after the current one without advancing
     Token peekToken() throws ScannerException {
         if (peekToken != null) return peekToken;
-        try {
+        sc.getNextToken();
+        peekToken = sc.nextToken;
+        return peekToken;
+    }
+
+    Token doublePeek() throws ScannerException {
+        if (doublePeek != null) return doublePeek;
+        else if (peekToken != null) {
+            sc.getNextToken();
+            doublePeek = sc.nextToken;
+        }
+        else {
             sc.getNextToken();
             peekToken = sc.nextToken;
-        } catch (ScannerException e) {throw e;}
-        return peekToken;
+            sc.getNextToken();
+            doublePeek = sc.nextToken;
+        }
+        return doublePeek;
     }
 
     void expect( int tokenKind, String thingExpected ) throws ParserException {

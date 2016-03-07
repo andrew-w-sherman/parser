@@ -11,15 +11,30 @@ public class Parser{
         } catch (ScannerException e) {throw e;}
     }
 
-    public Declaration parse() throws CompException{
+    public DeclarationList parse() throws CompException{
         getToken();
-        Declaration node = declaration();
-        getToken();
+        DeclarationList node = declarationList();
         expect(Token.T_EOF, "end of file");
         return node;
     }
 
     // DECLARATIONS!!!
+    
+    public DeclarationList declarationList() throws CompException {
+        // special case for error clarity
+        expect((token.kind != Token.T_EOF), "a program");
+        // normal stuff
+        int line = token.line;
+        Declaration head;
+        Declaration dn;
+        head = declaration();
+        dn = head;
+        while (token.kind != Token.T_EOF) {
+            dn.next = declaration();
+            dn = dn.next;
+        }
+        return new DeclarationList(line, head);
+    }
 
     public Declaration declaration() throws CompException {
         int line = token.line;
@@ -46,7 +61,7 @@ public class Parser{
         if (token.kind == Token.T_LBRACK) {
             expect(Token.T_LBRACK, "["); getToken();
             expect(Token.T_NUM, "literal integer array size");
-            int size = Integer.parseInt(token.value);
+            int size = Integer.parseInt(token.value); getToken();
             expect(Token.T_RBRACK, "]"); getToken();
             expect(Token.T_SEMICOL, "semicolon after declaration");
             getToken();

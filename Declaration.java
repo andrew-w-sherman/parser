@@ -2,6 +2,7 @@ public class Declaration extends DeclarationNode {
 
     public VariableDeclaration vd;
     public FunctionDeclaration fd;
+    public Declaration next;
 
     private Declaration(int line) {
         this.line = line;

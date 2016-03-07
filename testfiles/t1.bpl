@@ -1,5 +1,1 @@
-void main(void) {
-    while ( thing ) {
-        otherThing();
-    }
-}
+int i;

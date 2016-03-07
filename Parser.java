@@ -11,19 +11,57 @@ public class Parser{
         } catch (ScannerException e) {throw e;}
     }
 
-    public FunctionDeclaration parse() throws CompException{
+    public Declaration parse() throws CompException{
         getToken();
-        FunctionDeclaration node = functionDeclaration();
+        Declaration node = declaration();
         getToken();
         expect(Token.T_EOF, "end of file");
         return node;
     }
 
     // DECLARATIONS!!!
+
+    public Declaration declaration() throws CompException {
+        int line = token.line;
+        if (doublePeek().kind == Token.T_LPAREN)
+            return new Declaration(line, functionDeclaration());
+        else
+            return new Declaration(line, variableDeclaration());
+    }
+    
+    public VariableDeclaration variableDeclaration() throws CompException {
+        int line = token.line;
+        expect(token.isParamType(), "non-void variable type");
+        TypeSpecifier ts = typeSpecifier();
+        if (token.kind == Token.T_ASTR) {
+            Token ptr = token; getToken();
+            expect(Token.T_IDEN, "identifier for pointer param");
+            Token name = token; getToken();
+            expect(Token.T_SEMICOL, "semicolon after declaration");
+            getToken();
+            return new VariableDeclaration(line, ts, ptr, name);
+        }
+        expect(Token.T_IDEN, "identifier for parameter");
+        Token name = token; getToken();
+        if (token.kind == Token.T_LBRACK) {
+            expect(Token.T_LBRACK, "["); getToken();
+            expect(Token.T_NUM, "literal integer array size");
+            int size = Integer.parseInt(token.value);
+            expect(Token.T_RBRACK, "]"); getToken();
+            expect(Token.T_SEMICOL, "semicolon after declaration");
+            getToken();
+            return new VariableDeclaration(line, ts, name, size);
+        }
+        else {
+            expect(Token.T_SEMICOL, "semicolon after declaration");
+            getToken();
+            return new VariableDeclaration(line, ts, name);
+        }
+    }
     
     public TypeSpecifier typeSpecifier() throws CompException {
         expect(token.isTypeSpec(), "type specifier");
-        Token type  = token;
+        Token type = token;
         getToken();
         return new TypeSpecifier(type.line, type);
     }

@@ -1,4 +1,4 @@
-public class ParameterList extends ExpressionNode {
+public class ParameterList extends DeclarationNode {
 
     Parameter head;
 

@@ -25,8 +25,18 @@ public class Parser{
         if (token.kind == Token.T_LBRACE) {
             return new Statement(token.line, compoundStatement());
         }
+        if (token.kind == Token.T_IF) {
+            return new Statement(token.line, ifStatement());
+        }
         if (token.kind == Token.T_WHILE) {
             return new Statement(token.line, whileStatement());
+        }
+        if (token.kind == Token.T_RETURN) {
+            return new Statement(token.line, returnStatement());
+        }
+        if (token.kind == Token.T_WRITE ||
+                token.kind == Token.T_WRITELN) {
+            return new Statement(token.line, writeStatement());
         }
         return new Statement(token.line, expressionStatement());
     }
@@ -63,6 +73,21 @@ public class Parser{
         return es;
     }
 
+    public IfStatement ifStatement() throws CompException {
+        Token ifToken = token;
+        expect(Token.T_IF, "if"); getToken();
+        expect(Token.T_LPAREN, "( for if statement"); getToken();
+        Expression ex = expression();
+        expect(Token.T_RPAREN, ") for if statement"); getToken();
+        Statement st = statement();
+        if (token.kind == Token.T_ELSE) {
+            getToken();
+            return new IfStatement(ifToken.line, ex, st, statement());
+        }
+        else
+            return new IfStatement(ifToken.line, ex, st);
+    }
+
     public WhileStatement whileStatement() throws CompException {
         int line = token.line;
         expect(Token.T_WHILE, "\"while\"");
@@ -74,6 +99,39 @@ public class Parser{
         getToken();
         Statement st = statement();
         return new WhileStatement(line, ex, st);
+    }
+
+    public ReturnStatement returnStatement() throws CompException {
+        Token ret = token;
+        expect(Token.T_RETURN, "return token"); getToken();
+        if (token.kind == Token.T_SEMICOL) {
+            getToken();
+            return new ReturnStatement(ret.line);
+        }
+        else {
+            Expression ex = expression();
+            expect(Token.T_SEMICOL, "semicolon to end return"); getToken();
+            return new ReturnStatement(ret.line, ex);
+        }
+    }
+
+    public WriteStatement writeStatement() throws CompException {
+        Token wr = token;
+        if(token.kind == Token.T_WRITELN) {
+            getToken();
+            expect(Token.T_LPAREN, "("); getToken();
+            expect(Token.T_RPAREN, ")"); getToken();
+            expect(Token.T_SEMICOL, ";"); getToken();
+            return new WriteStatement(wr.line);
+        }
+        else {
+            expect(Token.T_WRITE, "write token"); getToken();
+            expect(Token.T_LPAREN, "("); getToken();
+            Expression ex = expression();
+            expect(Token.T_RPAREN, ")"); getToken();
+            expect(Token.T_SEMICOL, ";"); getToken();
+            return new WriteStatement(wr.line, ex);
+        }
     }
 
     // EXPRESSIONS!!!

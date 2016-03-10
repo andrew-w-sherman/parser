@@ -2,7 +2,7 @@ Andrew Sherman's BPL Parser!!! <asherman@oberlin.edu>
 
 README ====================================
 
-Hello! I hope grading is going well! Here is my readme. I included a simple java makefile in my handin (it just runs javac and removes class files) so you can use make to compile, and then use java Test <filename> to run (both from the root).
+Hello! I hope grading is going well! Here is my readme. I included a simple java makefile in my handin (it just runs javac and removes class files) so you can use make to compile, and then use java bpl.Bpl <filename> to run (both from the root). If you're feeling shelly, you can use ./gbc <filename> to run instead. (GNU bob compiler) And of course since it uses stdout you can use > to redirect to a file.
 
 THE TREE ==================================
 

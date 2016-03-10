@@ -1,5 +1,5 @@
 all:
-	rm *.class; javac Test.java;
+	find . -type f -name '*.class' -delete; javac bpl/Bpl.java;
 
 clean:
-	rm *.class;
+	find . -type f -name '*.class' -delete;

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# gnu bob compiler
+
+java bpl.Bpl $1

@@ -17,12 +17,16 @@ public class CompoundStatement extends StatementNode {
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("Compound statement:\n");
-        printDepth(depth);
-        System.out.print("Local decs:\n");
-        ld.printRec(depth+1);
-        printDepth(depth);
-        System.out.print("Body:\n");
-        sl.printRec(depth+1);
+        if (ld != null) {
+            printDepth(depth);
+            System.out.print("Local decs:\n");
+            ld.printRec(depth+1);
+        }
+        if (sl != null) {
+            printDepth(depth);
+            System.out.print("Body:\n");
+            sl.printRec(depth+1);
+        }
         if (next != null) next.printRec(depth);
     }
 }

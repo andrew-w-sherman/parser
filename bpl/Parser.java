@@ -166,7 +166,8 @@ public class Parser{
     public CompoundStatement compoundStatement() throws CompException {
         expect(Token.T_LBRACE, "left brace"); getToken();
         LocalDeclarations ld = localDeclarations();
-        CompoundStatement cs = new CompoundStatement(token.line, ld, statementList());
+        StatementList sl = statementList();
+        CompoundStatement cs = new CompoundStatement(token.line, ld, sl);
         expect(Token.T_RBRACE, "right brace"); getToken();
         return cs;
     }

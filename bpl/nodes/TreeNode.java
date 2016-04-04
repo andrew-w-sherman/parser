@@ -1,10 +1,13 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public abstract class TreeNode {
 
-    int type;
-    int line;
+    public int kind;
+    public int line;
     TreeNode next;
 
     public abstract void printRec(int depth);

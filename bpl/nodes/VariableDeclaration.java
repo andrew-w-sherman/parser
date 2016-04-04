@@ -1,11 +1,11 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class VariableDeclaration extends DeclarationNode {
 
-    public TypeSpecifier ts;
-    public boolean isPtr;
-    public Token name;
     public Integer size = null;
     public VariableDeclaration next;
 
@@ -13,18 +13,22 @@ public class VariableDeclaration extends DeclarationNode {
         this.line = line;
         this.name = name;
         this.ts = ts;
-        this.type = VAR_DEC;
+        this.kind = VAR_DEC;
         this.isPtr = false;
+        this.isArray = false;
     }
 
     public VariableDeclaration(int line, TypeSpecifier ts, Token ptr, Token name) {
         this(line, ts, name);
         this.isPtr = true;
+        this.isArray = false;
     }
 
     public VariableDeclaration(int line, TypeSpecifier ts, Token name, int size) {
         this(line, ts, name);
         this.size = size;
+        this.isPtr = false;
+        this.isArray = true;
     }
 
     public void printRec(int depth) {

@@ -101,6 +101,7 @@ public class Parser{
             getToken();
             return new Parameters(line);
         }
+        // TODO: accept () without void
         else
             return new Parameters(line, parameterList());
     }

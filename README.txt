@@ -2,7 +2,25 @@ Andrew Sherman's BPL Parser!!! <asherman@oberlin.edu>
 
 README ====================================
 
-Hello! I hope grading is going well! Here is my readme. I included a simple java makefile in my handin (it just runs javac and removes class files) so you can use make to compile, and then use java bpl.Bpl <filename> to run (both from the root). If you're feeling shelly, you can use ./gbc <filename> to run instead. (GNU bob compiler) And of course since it uses stdout you can use > to redirect to a file.
+Hello! I hope grading is going well! Here is my readme. I included a simple java makefile in my handin (it just runs javac and removes class files) so you can use make to compile, and then use java bpl.Bpl <filename> to run (both from the root). If you're feeling fancy, you can use ./gbc <filename> to run instead. (GNU bob compiler) And of course since it uses stdout you can use > to redirect to a file.
+
+THE TYPE-CHECKER ==========================
+
+Not too much to tell about it, continues with my somewhat cumbersome but more correct-feeling (to me) implementation. Every expression is assigned a type on the second pass but the recursive function also returns the type assigned to the child it was called on. I didn't have as much time to test as I might have liked but it seems like everything is working as it should be.
+
+I implemented isLNode in the parser so I didn't have to do any checking for that in my typechecker (which is why they come up as parser errors). The way I handle pointers between FNodes and Variable nodes is still a little hacky, but it seems to work fine.
+
+The debug printing is a little ugly but I made some little improvements so it's more readable, I name expressions differently if they're assignments, for instance.
+
+
+
+OLDER STUFF (ABOUT THE PARSER) ============================================
+===========================================================================
+===========================================================================
+
+
+
+
 
 THE TREE ==================================
 

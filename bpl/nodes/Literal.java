@@ -1,13 +1,16 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class Literal extends ExpressionNode {
 
     public Integer numVal;
     public String strVal;
 
     private Literal(int line) {
-        this.type = VAR;
+        this.kind = VAR;
         this.line = line;
     }
 
@@ -20,6 +23,12 @@ public class Literal extends ExpressionNode {
             numVal = Integer.valueOf(tok.value);
         }
         else System.out.print("This really shouldn't happen. (Literal.java)");
+    }
+
+    public String checkType() {
+        if (strVal != null) type = "string";
+        if (numVal != null) type = "int";
+        return type;
     }
 
     public void printRec(int depth) {

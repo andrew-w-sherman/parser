@@ -1,6 +1,9 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class CompoundStatement extends StatementNode {
 
     public StatementList sl;
@@ -11,7 +14,21 @@ public class CompoundStatement extends StatementNode {
         this.ld = ld;
         this.sl = sl;
         this.line = line;
-        this.type = COMPOUND_STMT;
+        this.kind = COMPOUND_STMT;
+    }
+
+    public void findReferences(HashMap<String, DeclarationNode> symbolTable,
+            LocalDecList localDecs) throws TypeException {
+        if (ld != null) {
+            for (VariableDeclaration dn = ld.head; dn != null; dn = dn.next) {
+                localDecs = new LocalDecList(dn, localDecs);
+            }
+        }
+        sl.findReferences(symbolTable, localDecs);
+    }
+
+    public void checkType(String rt) throws TypeException {
+        if (sl != null) sl.checkType(rt);
     }
 
     public void printRec(int depth) {

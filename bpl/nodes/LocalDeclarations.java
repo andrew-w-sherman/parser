@@ -1,6 +1,9 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class LocalDeclarations extends StatementNode {
 
     VariableDeclaration head;
@@ -8,7 +11,7 @@ public class LocalDeclarations extends StatementNode {
     public LocalDeclarations(int line, VariableDeclaration head) {
         this.line = line;
         this.head = head;
-        this.type = LOCAL_DECS;
+        this.kind = LOCAL_DECS;
     }
 
     public void printRec(int depth) {

@@ -1,13 +1,16 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class TypeSpecifier extends DeclarationNode {
 
     public Token typeSpec;
 
     public TypeSpecifier(int line, Token typeSpec) {
         this.typeSpec = typeSpec;
-        this.type = TYPE_SPECIFIER;
+        this.kind = TYPE_SPECIFIER;
         this.line = line;
     }
 

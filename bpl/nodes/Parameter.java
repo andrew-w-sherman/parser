@@ -1,19 +1,19 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class Parameter extends DeclarationNode {
 
-    public TypeSpecifier ts;
-    public boolean isPtr;
-    public boolean isArray;
-    public Token name;
     public Parameter next;
+    public String type;
 
     public Parameter(int line, TypeSpecifier ts, Token name) {
         this.line = line;
         this.name = name;
         this.ts = ts;
-        this.type = PARAM;
+        this.kind = PARAM;
         this.isPtr = false;
         this.isArray = false;
     }
@@ -26,6 +26,20 @@ public class Parameter extends DeclarationNode {
     public Parameter(int line, TypeSpecifier ts, Token name, boolean array) {
         this(line, ts, name);
         this.isArray = true;
+    }
+
+    public String getType() {
+        if (ts.typeSpec.kind == Token.T_STRING)
+            type = "string";
+        else if (ts.typeSpec.kind == Token.T_INT)
+            type = "int";
+        else
+            System.out.println("oh dang... (Variable.java)");
+        if (isPtr)
+            type = "pointer to " + type;
+        else if (isArray)
+            type = type + " array";
+        return type;
     }
 
     public void printRec(int depth) {

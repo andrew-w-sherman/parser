@@ -1,6 +1,9 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class Factor extends ExpressionNode {
 
     public Expression ex;
@@ -11,7 +14,7 @@ public class Factor extends ExpressionNode {
 
     private Factor(int line) {
         this.line = line;
-        this.type = COMP_EXP;
+        this.kind = COMP_EXP;
     }
 
     public Factor(int line, Expression ex) {
@@ -39,6 +42,23 @@ public class Factor extends ExpressionNode {
     public Factor(int line, Variable var) {
         this(line);
         this.var = var;
+    }
+
+    public void findReferences(HashMap<String, DeclarationNode> symbolTable,
+            LocalDecList localDecs) throws TypeException {
+        if (ex != null) ex.findReferences(symbolTable, localDecs);
+        else if (fc != null) fc.findReferences(symbolTable, localDecs);
+        else if (var != null) var.findReferences(symbolTable, localDecs);
+    }
+
+    public String checkType() throws TypeException {
+        if (readToken != null) type = "int";
+        else if (ex != null) type = ex.checkType();
+        else if (fc != null) type = fc.checkType();
+        else if (lit != null) type = lit.checkType();
+        else if (var != null) type = var.checkType();
+        TypeChecker.debug("Factor on " + line + " assigned " + type);
+        return type;
     }
 
     public boolean isLNode() {

@@ -1,6 +1,9 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class Declaration extends DeclarationNode {
 
     public VariableDeclaration vd;
@@ -9,7 +12,7 @@ public class Declaration extends DeclarationNode {
 
     private Declaration(int line) {
         this.line = line;
-        this.type = DECLARATION;
+        this.kind = DECLARATION;
     }
 
     public Declaration(int line, VariableDeclaration vd) {

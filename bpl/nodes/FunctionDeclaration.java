@@ -1,21 +1,23 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class FunctionDeclaration extends DeclarationNode {
 
-    public TypeSpecifier ts;
-    public Token name;
-    public Parameters params;
     public CompoundStatement cs;
 
     public FunctionDeclaration(int line, TypeSpecifier ts,
-            Token name, Parameters params, CompoundStatement cs) {
+            Token name, Parameters params, CompoundStatement cs)
+            throws TypeException {
         this.line = line;
-        this.type = FUN_DEC;
+        this.kind = FUN_DEC;
         this.ts = ts;
         this.name = name;
         this.params = params;
         this.cs = cs;
+        this.isFunDec = true;
     }
 
     public void printRec(int depth) {

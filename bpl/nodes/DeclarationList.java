@@ -1,14 +1,17 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class DeclarationList extends DeclarationNode {
 
-    Declaration head;
+    public Declaration head;
 
     public DeclarationList(int line, Declaration head) {
         this.line = line;
         this.head = head;
-        this.type = DECLARATION_LIST;
+        this.kind = DECLARATION_LIST;
     }
 
     public void printRec(int depth) {

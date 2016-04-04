@@ -1,6 +1,9 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class Expression extends ExpressionNode {
 
     public Variable var;
@@ -11,7 +14,7 @@ public class Expression extends ExpressionNode {
 
     public Expression(int line) {
         this.line = line;
-        this.type = EXPRESSION;
+        this.kind = EXPRESSION;
     }
 
     public Expression(int line, Variable var, Expression ex) {
@@ -23,6 +26,40 @@ public class Expression extends ExpressionNode {
     public Expression(int line, CompoundExpression ce) {
         this(line);
         this.ce = ce;
+    }
+
+    public void findReferences(HashMap<String, DeclarationNode> symbolTable,
+            LocalDecList localDecs) throws TypeException {
+        if (var != null && ex != null) {
+            // assignment statement
+            var.findReferences(symbolTable, localDecs);
+            ex.findReferences(symbolTable, localDecs);
+        }
+        else if (ce != null) {
+            // compound expression
+            ce.findReferences(symbolTable, localDecs);
+        }
+        if (next != null) {
+            next.findReferences(symbolTable, localDecs);
+        }
+    }
+
+    public String checkType() throws TypeException {
+        if (var != null && ex != null) {
+            // assignment!!!
+            String varType = var.checkType();
+            String exType = ex.checkType();
+            if (varType.equals(exType))
+                type = exType;
+            else throw new TypeException("Mismatched assignment.", line);
+            TypeChecker.debug("Assignment Exp on " + line + " assigned "
+                    + type);
+        }
+        else if (ce != null) {
+            type = ce.checkType();
+            TypeChecker.debug("Exp on " + line + " assigned " + type);
+        }
+        return type;
     }
 
     public void printRec(int depth) {

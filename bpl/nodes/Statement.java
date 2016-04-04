@@ -1,63 +1,35 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class Statement extends StatementNode {
 
-    public ExpressionStatement es;
-    public CompoundStatement cs;
-    public IfStatement is;
-    public WhileStatement ws;
-    public ReturnStatement rs;
-    public WriteStatement wrs;
-
+    public StatementNode sn;
     public Statement next;
 
-    public Statement(int line, ExpressionStatement child) {
+    public Statement(int line, StatementNode child) {
         this.line = line;
-        this.type = STATEMENT;
-        es = child;
+        this.kind = STATEMENT;
+        sn = child;
+    } 
+
+    public void findReferences(HashMap<String, DeclarationNode> symbolTable,
+            LocalDecList localDecs) throws TypeException {
+        sn.findReferences(symbolTable, localDecs);
+        if (next != null) next.findReferences(symbolTable, localDecs);
     }
 
-    public Statement(int line, CompoundStatement child) {
-        this.line = line;
-        this.type = STATEMENT;
-        cs = child;
-    }
-
-    public Statement(int line, IfStatement child) {
-        this.line = line;
-        this.type = STATEMENT;
-        is = child;
-    }
-
-    public Statement(int line, WhileStatement child) {
-        this.line = line;
-        this.type = STATEMENT;
-        ws = child;
-    }
-
-    public Statement(int line, ReturnStatement child) {
-        this.line = line;
-        this.type = STATEMENT;
-        rs = child;
-    }
-
-    public Statement(int line, WriteStatement child) {
-        this.line = line;
-        this.type = STATEMENT;
-        wrs = child;
+    public void checkType(String rt) throws TypeException {
+        sn.checkType(rt);
+        if (next != null) next.checkType(rt);
     }
 
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("Statement\n");
-        if(es != null) es.printRec(depth+1);
-        else if(cs != null) cs.printRec(depth + 1);
-        else if(is != null) is.printRec(depth + 1);
-        else if(ws != null) ws.printRec(depth + 1);
-        else if(rs != null) rs.printRec(depth + 1);
-        else if(wrs != null) wrs.printRec(depth + 1);
-        else System.out.println("This shouldn't happen!!!! (Statement.java)");
+        sn.printRec(depth + 1);
         if(next != null) next.printRec(depth);
     }
 }

@@ -1,14 +1,17 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class ParameterList extends DeclarationNode {
 
-    Parameter head;
+    public Parameter head;
 
     public ParameterList(int line, Parameter head) {
         this.line = line;
         this.head = head;
-        this.type = ARG_LIST;
+        this.kind = PARAM_LIST;
     }
 
     public void printRec(int depth) {

@@ -1,12 +1,15 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class Parameters extends DeclarationNode {
 
     public ParameterList pl;
 
     public Parameters(int line) {
-        this.type = PARAMS;
+        this.kind = PARAMS;
         this.line = line;
     }
 

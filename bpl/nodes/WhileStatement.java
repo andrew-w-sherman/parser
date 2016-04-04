@@ -1,6 +1,9 @@
 package bpl.nodes;
+import bpl.TypeChecker;
 import bpl.Token;
+import bpl.LocalDecList;
 import bpl.exceptions.*;
+import java.util.HashMap;
 public class WhileStatement extends StatementNode {
 
     Expression ex;
@@ -10,7 +13,20 @@ public class WhileStatement extends StatementNode {
         this.ex = ex;
         this.st = st;
         this.line = line;
-        this.type = WHILE_STMT;
+        this.kind = WHILE_STMT;
+    }
+
+    public void findReferences(HashMap<String, DeclarationNode> symbolTable,
+            LocalDecList localDecs) throws TypeException {
+        ex.findReferences(symbolTable, localDecs);
+        st.findReferences(symbolTable, localDecs);
+    }
+
+    public void checkType(String rt) throws TypeException {
+        if (!ex.checkType().equals("int"))
+            throw new TypeException(
+                    "While predicate must be type int.", line);
+        st.checkType(rt);
     }
 
     public void printRec(int depth) {

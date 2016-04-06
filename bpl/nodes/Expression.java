@@ -62,6 +62,11 @@ public class Expression extends ExpressionNode {
         return type;
     }
 
+    public boolean isLNode() {
+        if (ce != null) return ce.isLNode();
+        return false;
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("Expression\n");

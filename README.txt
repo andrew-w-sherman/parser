@@ -1,5 +1,12 @@
 Andrew Sherman's BPL Parser!!! <asherman@oberlin.edu>
 
+==================== IMPORTANT NOTE ======================
+=           This is the second handin because I          =
+=   fixed some issues with L-values related to using &.  =
+=     You can grade either, of course, but I figured     =
+=                   I'd submit my fix.                   =
+==========================================================
+
 README ====================================
 
 Hello! I hope grading is going well! Here is my readme. I included a simple java makefile in my handin (it just runs javac and removes class files) so you can use make to compile, and then use java bpl.Bpl <filename> to run (both from the root). If you're feeling fancy, you can use ./gbc <filename> to run instead. (GNU bob compiler) And of course since it uses stdout you can use > to redirect to a file.

@@ -279,12 +279,6 @@ public class Parser{
         int line = token.line;
         CompoundExpression ce = compoundExpression();
         if(token.kind == Token.T_ASSN) {
-            // awful ambiguity hack: fix???
-            if (ce.e1.t.f.ptrOp != null &&
-                    ce.e1.t.f.ptrOp.kind == Token.T_ASTR) {
-                ce.e1.t.f.fact.var.astr = ce.e1.t.f.ptrOp;
-                ce.e1.t.f.ptrOp = null;
-            }
             expect(ce.isLNode(), "mutable reference");
             getToken();
             // this is weird, maybe I want to just save the ce
@@ -367,7 +361,13 @@ public class Parser{
         if (token.isPointerOp()) {
             Token ptr = token;
             getToken();
-            return new FNode(ptr.line, ptr, factor());
+            FNode fn = new FNode(ptr.line, ptr, factor());
+            if (ptr.kind == Token.T_ASTR && fn.fact.var != null) {
+                System.out.println("we're here");
+                fn.fact.var.astr = fn.ptrOp;
+                fn.ptrOp = null;
+            }
+            return fn;
         }
         if (token.kind == Token.T_MINUS) {
             int line = token.line;

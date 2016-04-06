@@ -57,6 +57,9 @@ public class FNode extends ExpressionNode {
             }
             else if (ptrOp.kind == Token.T_AMPR) {
                 // reference
+                if (!fact.isLNode())
+                    throw new TypeException(
+                            "Can't reference non-l-value.", line);
                 if (factType.equals("int")) type = "pointer to int";
                 else if (factType.equals("string")) type = "pointer to string";
                 else throw new TypeException(

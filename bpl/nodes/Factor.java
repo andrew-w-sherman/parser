@@ -63,6 +63,7 @@ public class Factor extends ExpressionNode {
 
     public boolean isLNode() {
         if (var != null) return true;
+        if (ex != null) return ex.isLNode();
         return false;
     }
 

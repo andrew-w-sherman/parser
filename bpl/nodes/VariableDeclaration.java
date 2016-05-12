@@ -9,6 +9,9 @@ public class VariableDeclaration extends DeclarationNode {
     public Integer size = null;
     public VariableDeclaration next;
 
+    public int position;
+    public int depth;
+
     public VariableDeclaration(int line, TypeSpecifier ts, Token name) {
         this.line = line;
         this.name = name;
@@ -29,6 +32,18 @@ public class VariableDeclaration extends DeclarationNode {
         this.size = size;
         this.isPtr = false;
         this.isArray = true;
+    }
+
+    public int markVariables(int position, int depth,
+            FunctionDeclaration fd) {
+        position++;
+        this.position = position;
+        this.depth = depth;
+        if (next != null) {
+            position = next.markVariables(position, depth, fd);
+        }
+        fd.setMaxPos(position);
+        return position;
     }
 
     public void printRec(int depth) {

@@ -4,12 +4,12 @@ public class GenException extends CompException {
     private String message;
     private int lineNum;
 
-    public TypeException(String message, int lineNum) {
+    public GenException(String message, int lineNum) {
         this.message = message;
         this.lineNum = lineNum;
     }
 
-    public TypeException(String message) {
+    public GenException(String message) {
         this.message = message;
         this.lineNum = -1;
     }

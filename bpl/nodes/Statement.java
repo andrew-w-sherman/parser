@@ -26,6 +26,13 @@ public class Statement extends StatementNode {
         if (next != null) next.checkType(rt);
     }
 
+    public int markVariables(int position, int depth,
+            FunctionDeclaration fd) {
+        position = sn.markVariables(position, depth, fd);
+        if (next != null) position = next.markVariables(position, depth, fd);
+        return position;
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("Statement\n");

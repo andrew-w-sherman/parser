@@ -18,6 +18,12 @@ public class Parameters extends DeclarationNode {
         this.pl = pl;
     }
 
+    public int markVariables(int position, int depth, FunctionDeclaration fd)
+    {
+        if (pl == null) return position;
+        else return pl.markVariables(position, depth, fd);
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         if (pl == null)

@@ -6,8 +6,8 @@ import bpl.exceptions.*;
 import java.util.HashMap;
 public class WhileStatement extends StatementNode {
 
-    Expression ex;
-    Statement st;
+    public Expression ex;
+    public Statement st;
 
     public WhileStatement(int line, Expression ex, Statement st) {
         this.ex = ex;
@@ -27,6 +27,11 @@ public class WhileStatement extends StatementNode {
             throw new TypeException(
                     "While predicate must be type int.", line);
         st.checkType(rt);
+    }
+
+    public int markVariables(int position, int depth,
+            FunctionDeclaration fd) {
+        return st.markVariables(position, depth, fd);
     }
 
     public void printRec(int depth) {

@@ -8,8 +8,8 @@ public class FNode extends ExpressionNode {
 
     public Token ptrOp;
     public Factor fact;
-    boolean negation;
-    FNode fn;
+    public boolean negation;
+    public FNode fn;
 
     private FNode(int line) {
         this.line = line;

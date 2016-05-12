@@ -14,6 +14,11 @@ public class ParameterList extends DeclarationNode {
         this.kind = PARAM_LIST;
     }
 
+    public int markVariables(int position, int depth, FunctionDeclaration fd)
+    {
+        return head.markVariables(position, depth, fd);
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("Parameter List\n");

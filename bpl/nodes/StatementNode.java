@@ -11,4 +11,10 @@ public abstract class StatementNode extends TreeNode {
             LocalDecList localDecs) throws TypeException {}
 
     public void checkType(String rt) throws TypeException {}
+
+    // we return position
+    public int markVariables(int position, int depth,
+            FunctionDeclaration fd) {
+        return position;
+    }
 }

@@ -14,6 +14,11 @@ public class LocalDeclarations extends StatementNode {
         this.kind = LOCAL_DECS;
     }
 
+    public int markVariables(int position, int depth,
+            FunctionDeclaration fd) {
+        return head.markVariables(position, depth, fd);
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("Local Declarations\n");

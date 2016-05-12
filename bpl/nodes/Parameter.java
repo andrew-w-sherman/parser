@@ -9,6 +9,9 @@ public class Parameter extends DeclarationNode {
     public Parameter next;
     public String type;
 
+    public int position;
+    public int depth;
+
     public Parameter(int line, TypeSpecifier ts, Token name) {
         this.line = line;
         this.name = name;
@@ -40,6 +43,17 @@ public class Parameter extends DeclarationNode {
         else if (isArray)
             type = type + " array";
         return type;
+    }
+
+    public int markVariables(int depth, int position, FunctionDeclaration fd)
+    {
+        position++;
+        this.position = position;
+        this.depth = depth;
+        if (next != null)
+            position = next.markVariables(position, depth, fd);
+        fd.setMaxPos(position);
+        return position;
     }
 
     public void printRec(int depth) {

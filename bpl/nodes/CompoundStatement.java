@@ -31,6 +31,15 @@ public class CompoundStatement extends StatementNode {
         if (sl != null) sl.checkType(rt);
     }
 
+    public int markVariables(int position, int depth,
+            FunctionDeclaration fd) {
+        depth++;
+        int initialPos = position;
+        if (ld != null) position = ld.markVariables(position, depth, fd);
+        if (sl != null) position = sl.markVariables(position, depth, fd);
+        return initialPos;
+    }
+
     public void printRec(int depth) {
         printDepth(depth);
         System.out.print("Compound statement:\n");

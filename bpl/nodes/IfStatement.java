@@ -6,9 +6,9 @@ import bpl.exceptions.*;
 import java.util.HashMap;
 public class IfStatement extends StatementNode {
 
-    Expression ex;
-    Statement st1;
-    Statement st2;
+    public Expression ex;
+    public Statement st1;
+    public Statement st2;
 
     public IfStatement(int line, Expression ex, Statement st) {
         this.ex = ex;
@@ -36,6 +36,13 @@ public class IfStatement extends StatementNode {
                     "Predicate of if must be type int.", line);
         st1.checkType(rt);
         if (st2 != null) st2.checkType(rt);
+    }
+
+    public int markVariables(int position, int depth,
+            FunctionDeclaration fd) {
+        position = st1.markVariables(position, depth, fd);
+        if (st2 != null) st2.markVariables(position, depth, fd);
+        return position;
     }
 
     public void printRec(int depth) {

@@ -6,7 +6,7 @@ import bpl.exceptions.*;
 import java.util.HashMap;
 public class StatementList extends StatementNode {
 
-    Statement head;
+    public Statement head;
 
     public StatementList(int line, Statement head) {
         this.line = line;
@@ -21,6 +21,11 @@ public class StatementList extends StatementNode {
 
     public void checkType(String rt) throws TypeException {
         head.checkType(rt);
+    }
+    
+    public int markVariables(int position, int depth,
+            FunctionDeclaration fd) {
+        return head.markVariables(position, depth, fd);
     }
 
     public void printRec(int depth) {

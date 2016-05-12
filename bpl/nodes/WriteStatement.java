@@ -6,7 +6,7 @@ import bpl.exceptions.*;
 import java.util.HashMap;
 public class WriteStatement extends StatementNode {
 
-    Expression ex;
+    public Expression ex;
 
     public WriteStatement(int line) {
         this.line = line;
@@ -21,6 +21,15 @@ public class WriteStatement extends StatementNode {
     public void findReferences(HashMap<String, DeclarationNode> symbolTable,
             LocalDecList localDecs) throws TypeException {
         if (ex != null) ex.findReferences(symbolTable, localDecs);
+    }
+
+    public void checkType(String rt) throws TypeException {
+        if (ex == null) return;
+        String exType = ex.checkType();
+        if (!(exType.equals("int") || exType.equals("string"))) {
+            throw new TypeException("Write statement argument must be" +
+                    " printable.", line);
+        }
     }
 
     public void printRec(int depth) {

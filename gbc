@@ -3,3 +3,8 @@
 # gnu bob compiler
 
 java bpl.Bpl $1
+
+filename=$1
+filename="${filename%.*}"
+
+gcc -g ${filename}.s -o ${filename}

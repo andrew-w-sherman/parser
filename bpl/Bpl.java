@@ -12,7 +12,7 @@ public class Bpl {
 
         if (args.length < 1) {System.out.println("Please pass a file name."); return;}
         inputFileName = args[0];
-        outputFileName = inputFileName.split(".")[0] + ".s";
+        outputFileName = inputFileName.split("\\.")[0] + ".s";
         try {
             myParser = new Parser(inputFileName);
         } catch (CompException e) {
@@ -34,8 +34,8 @@ public class Bpl {
             return;
         }
         try {
-            gen = new Generator(root);
-            gen.generate(outputFileName);
+            gen = new Generator(outputFileName);
+            gen.generate(root);
         } catch (GenException e) {
             System.out.println(e);
             return;

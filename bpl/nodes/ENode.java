@@ -10,7 +10,7 @@ public class ENode extends ExpressionNode {
     public AddOp add;
     public TNode t;
 
-    public ENode(int line) {
+    private ENode(int line) {
         this.line = line;
         this.kind = E;
     }

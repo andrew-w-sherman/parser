@@ -104,14 +104,14 @@ public class Generator {
             IfStatement is = (IfStatement) sn;
             genCodeExpression(is.ex);
             // result is in eax/rax
-            // manipulate it for cond jumping
-            genAccumBooleanizer();
             String l1 = getLabel();
             // cond jump past first statement
+            genImmReg("cmpl", "0", accum, "compare to 0");
+            genDir("je", l1, "cond jump to l2");
             genStatement(is.st1);
             if (is.st2 != null) {
                 String l2 = getLabel();
-                // jmp noncond to #2
+                genDir("jmp", l2, "noncond to end of if");
                 // label for first statement
                 genLabelMark(l1);
                 genStatement(is.st2);
@@ -129,19 +129,16 @@ public class Generator {
             genCodeExpression(ws.ex);
             // result is in eax/rax
             // manipulate it for cond jumping
-            genAccumBooleanizer();
             String l1 = getLabel();
             genLabelMark(l1);
             String l2 = getLabel();
-            // cond jump to l2
+            genImmReg("cmpl", "0", accum, "compare to 0");
+            genDir("je", l2, "cond jump to l2");
             genStatement(ws.st);
             // noncond jump to L1
+            genDir("jmp", l1, "back to start of while");
             genLabelMark(l2);
         }
-    }
-
-    private void genAccumBooleanizer() {
-        // turn the accum into a booleanized version of itself
     }
 
     private void genCodeExpression(Expression ex) {

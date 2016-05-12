@@ -62,11 +62,11 @@ public class Generator {
         // allocate temp vars
         genReg("push", tempq, "push the temp");
         genStatement(f.cs.sl.head);
+        // deallocate temp vars
+        genImmReg("addq", "8", sp, "pop the temp");
         // dealloc locals
         genImmReg("addq", (numLoc * 8) + "", fp,
                 "Pull local vars off frame");
-        // deallocate temp vars
-        genImmReg("addq", "8", sp, "pop the temp");
         genOp("ret", "return from the function");
     }
 

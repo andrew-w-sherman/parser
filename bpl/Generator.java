@@ -63,7 +63,7 @@ public class Generator {
         genReg("push", tempq, "push the temp");
         genStatement(f.cs.sl.head);
         // deallocate temp vars
-        genImmReg("addq", "8", sp, "pop the temp");
+        genReg("pop", tempq, "pop the temp");
         // dealloc locals
         genImmReg("addq", (numLoc * 8) + "", fp,
                 "Pull local vars off frame");

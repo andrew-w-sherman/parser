@@ -1,15 +1,20 @@
-Andrew Sherman's BPL Parser!!! <asherman@oberlin.edu>
+Andrew Sherman's BPL Compiler!!! <asherman@oberlin.edu>
 
 ==================== IMPORTANT NOTE ======================
-=           This is the second handin because I          =
-=   fixed some issues with L-values related to using &.  =
-=     You can grade either, of course, but I figured     =
-=                   I'd submit my fix.                   =
+        Ok, so here's my second handin, this has function
+        calling, otherwise what works is local
+        variables, arithmetic, if, while, write,
+        and all the things needed to make all those
+        things work. I might make one more handin
+        later today to add some of the other stuff,
+        but I figured this was the core functionality.
+        Best,
+        Andrew
 ==========================================================
 
 README ====================================
 
-Hello! I hope grading is going well! Here is my readme. I included a simple java makefile in my handin (it just runs javac and removes class files) so you can use make to compile, and then use java bpl.Bpl <filename> to run (both from the root). If you're feeling fancy, you can use ./gbc <filename> to run instead. (GNU bob compiler) And of course since it uses stdout you can use > to redirect to a file.
+Hello! I hope grading is going well! Here is my readme. I included a simple java makefile in my handin (it just runs javac and removes class files) so you can use make to compile, and then use java bpl.Bpl <filename> to run (both from the root). If you're feeling fancy, you can use ./gbc <filename> to run and compile with gcc. (GNU bob compiler)
 
 THE TYPE-CHECKER ==========================
 

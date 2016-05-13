@@ -6,7 +6,7 @@ import bpl.exceptions.*;
 import java.util.HashMap;
 public class ArgumentList extends ExpressionNode {
 
-    Expression head;
+    public Expression head;
 
     public ArgumentList(int line, Expression head) {
         this.line = line;

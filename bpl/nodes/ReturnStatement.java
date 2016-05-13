@@ -6,7 +6,8 @@ import bpl.exceptions.*;
 import java.util.HashMap;
 public class ReturnStatement extends StatementNode {
 
-    Expression ex;
+    public Expression ex;
+    public FunctionDeclaration fd;
 
     public ReturnStatement(int line) {
         this.line = line;
@@ -20,13 +21,26 @@ public class ReturnStatement extends StatementNode {
 
     public void findReferences(HashMap<String, DeclarationNode> symbolTable,
             LocalDecList localDecs) throws TypeException {
-        ex.findReferences(symbolTable, localDecs);
+        if (ex != null) ex.findReferences(symbolTable, localDecs);
     }
 
     public void checkType(String rt) throws TypeException {
-        if (!ex.checkType().equals(rt))
-            throw new TypeException("Improper return type.", line);
-        TypeChecker.debug("Good return at " + line + ", type is " + rt);
+        if (ex == null) {
+            if (!rt.equals(""))
+                throw new TypeException("Improper return type.", line);
+            TypeChecker.debug("Good return at " + line + ", type is " + rt);
+        }
+        else {
+            if (!ex.checkType().equals(rt))
+                throw new TypeException("Improper return type.", line);
+            TypeChecker.debug("Good return at " + line + ", type is " + rt);
+        }
+    }
+
+    public int markVariables(int position, int depth, FunctionDeclaration fd)
+    {
+        this.fd = fd;
+        return position;
     }
 
     public void printRec(int depth) {

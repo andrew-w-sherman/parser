@@ -11,7 +11,6 @@ public class Variable extends ExpressionNode {
     public Expression ex;
 
     public DeclarationNode declaration;
-    public VariableDeclaration vdec;
 
     private Variable(int line) {
         this.kind = VAR;
@@ -49,8 +48,7 @@ public class Variable extends ExpressionNode {
         if (declaration.isFunDec)
             throw new TypeException("Symbol " + name.value + 
                     " is a function being used as a variable.", name.line);
-        // little extra, cast it to variabledeclaration
-        vdec = (VariableDeclaration) declaration;
+        // little extra, cast it to right thing
         if (declaration.ts.typeSpec.kind == Token.T_STRING)
             type = "string";
         else if (declaration.ts.typeSpec.kind == Token.T_INT)

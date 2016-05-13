@@ -29,7 +29,7 @@ public class FunctionDeclaration extends DeclarationNode {
     }
 
     public void markVariables(int position, int depth) {
-        position = params.markVariables(position, depth, this);
+        params.markVariables(position, depth, this);
         cs.markVariables(position, depth, this);
     }
 

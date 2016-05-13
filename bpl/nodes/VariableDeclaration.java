@@ -9,9 +9,6 @@ public class VariableDeclaration extends DeclarationNode {
     public Integer size = null;
     public VariableDeclaration next;
 
-    public int position;
-    public int depth;
-
     public VariableDeclaration(int line, TypeSpecifier ts, Token name) {
         this.line = line;
         this.name = name;

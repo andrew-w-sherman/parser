@@ -143,21 +143,35 @@ public class Generator {
             genDir("jmp", l1, "back to start of while");
             genLabelMark(l2);
         }
+        else if (sn.kind == TreeNode.RETURN_STMT) {
+            ReturnStatement rs = (ReturnStatement) sn;
+            if (rs.ex != null)
+                genCodeExpression(rs.ex);
+            int numLoc = rs.fd.maxPos;
+            // deallocate temp vars
+            genReg("pop", tempq, "pop the temp");
+            // dealloc locals
+            genImmReg("addq", (numLoc * 8) + "", sp,
+                    "Pull local vars off frame");
+            genOp("ret", "return from the function");
+        }
     }
 
     private void genCodeExpression(Expression ex) {
         if (ex.ex != null) {
             // this is where assignment happens
             genCodeExpression(ex.ex); // it's in the accumulator
-            int offset = (ex.var.vdec.position + 1) * -8;
-            genRegOff("movl", accum, offset, fp, "get l var");
+            if (ex.var.declaration.depth == 0) System.out.println(
+                    "no globals yet");
+            else
+                genRegOff("movl", accum, offsetOf(ex.var), fp, "get l var");
         } 
         else {
             // this is where normal happens
             genArithmetic(ex.ce);
         }
 
-        if (ex.next != null) genCodeExpression(ex.next);
+        // if (ex.next != null) genCodeExpression(ex.next);
     }
 
     private void genArithmetic(ExpressionNode en) {
@@ -240,7 +254,7 @@ public class Generator {
 
     private void genFactor(Factor fact) {
         if (fact.readToken != null) {}
-        else if (fact.fc != null) {}
+        else if (fact.fc != null) genFunctionCall(fact.fc);
         else if (fact.ex != null) {}
         else if (fact.var != null) genVariableRef(fact.var);
         else if (fact.lit != null) genLiteral(fact.lit);
@@ -258,13 +272,47 @@ public class Generator {
     }
     
     private void genVariableRef(Variable v) {
-        if (v.type.equals("int") && v.vdec.depth == 0) {
+        if (v.type.equals("int") && v.declaration.depth == 0) {
             // globals here
         }
         else if (v.type.equals("int")) {
-            int offset = (v.vdec.position + 1) * -8;
-            genOffReg("movl", offset, fp, accum, "get a variable");
+            genOffReg("movl", offsetOf(v), fp, accum, "get a param variable");
         }
+    }
+
+    private int offsetOf(Variable v) {
+        int offset = 0; // garbage value
+        if (v.declaration.depth == 1) {
+            offset = (v.declaration.position + 2) * 8;
+        }
+        else if (v.declaration.depth > 1) {
+            offset = (v.declaration.position + 1) * -8;
+        }
+        else System.out.println("Oh golly");
+        return offset;
+    }
+
+    private void genFunctionCall(FunctionCall fc) {
+        // evaluate the arguments & push
+        int numArgs;
+        if (fc.args.al == null) numArgs = 0;
+        else numArgs = pushArgs(fc.args.al.head);
+        genReg("push", fp, "push the frame pointer");
+        genDir("call", fc.name.value, "call function");
+        genReg("pop", fp, "restore the frame pointer");
+        // pop the arguments
+        genImmReg("addq", (numArgs * 8) + "", sp, "pop args");
+    }
+
+    private int pushArgs(Expression arg) {
+        // we're pushing the last arg first so we use tail recursion
+        int howMany;
+        if (arg.next != null) howMany = pushArgs(arg.next);
+        else howMany = 0;
+        genCodeExpression(arg);
+        genReg("push", accumq, "push the argument result");
+        howMany++;
+        return howMany;
     }
 
     private String getLabel() {

@@ -47,9 +47,9 @@ public class Parameter extends DeclarationNode {
 
     public int markVariables(int depth, int position, FunctionDeclaration fd)
     {
-        position++;
         this.position = position;
         this.depth = depth;
+        position++;
         if (next != null)
             position = next.markVariables(position, depth, fd);
         fd.setMaxPos(position);

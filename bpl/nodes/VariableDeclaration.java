@@ -36,9 +36,9 @@ public class VariableDeclaration extends DeclarationNode {
 
     public int markVariables(int position, int depth,
             FunctionDeclaration fd) {
-        position++;
         this.position = position;
         this.depth = depth;
+        position++;
         if (next != null) {
             position = next.markVariables(position, depth, fd);
         }

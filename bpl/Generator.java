@@ -57,7 +57,7 @@ public class Generator {
         genRegReg("movq", sp, fp, "setup fp");
         int numLoc = f.maxPos;
         // allocate locals
-        genImmReg("subq", (numLoc * 8) + "", fp,
+        genImmReg("subq", (numLoc * 8) + "", sp,
                 "Put local vars in frame");
         // allocate temp vars
         genReg("push", tempq, "push the temp");
@@ -65,7 +65,7 @@ public class Generator {
         // deallocate temp vars
         genReg("pop", tempq, "pop the temp");
         // dealloc locals
-        genImmReg("addq", (numLoc * 8) + "", fp,
+        genImmReg("addq", (numLoc * 8) + "", sp,
                 "Pull local vars off frame");
         genOp("ret", "return from the function");
     }
@@ -96,15 +96,19 @@ public class Generator {
             genStatement(s.sn);
             if (s.next != null) genStatement(s.next);
         }
+        else if (sn.kind == TreeNode.EXPRESSION_STMT) {
+            ExpressionStatement es = (ExpressionStatement) sn;
+            genCodeExpression(es.expression);
+        }
         else if (sn.kind == TreeNode.COMPOUND_STMT) {
             CompoundStatement cs = (CompoundStatement) sn;
             genStatement(cs.sl.head);
         }
         else if (sn.kind == TreeNode.IF_STMT) {
             IfStatement is = (IfStatement) sn;
-            genCodeExpression(is.ex);
             // result is in eax/rax
             String l1 = getLabel();
+            genCodeExpression(is.ex);
             // cond jump past first statement
             genImmReg("cmpl", "0", accum, "compare to 0");
             genDir("je", l1, "cond jump to l2");
@@ -126,12 +130,12 @@ public class Generator {
         }
         else if (sn.kind == TreeNode.WHILE_STMT) {
             WhileStatement ws = (WhileStatement) sn;
-            genCodeExpression(ws.ex);
             // result is in eax/rax
             // manipulate it for cond jumping
             String l1 = getLabel();
             genLabelMark(l1);
             String l2 = getLabel();
+            genCodeExpression(ws.ex);
             genImmReg("cmpl", "0", accum, "compare to 0");
             genDir("je", l2, "cond jump to l2");
             genStatement(ws.st);
@@ -142,7 +146,12 @@ public class Generator {
     }
 
     private void genCodeExpression(Expression ex) {
-        if (ex.ex != null) ; // this is where assignment happen
+        if (ex.ex != null) {
+            // this is where assignment happens
+            genCodeExpression(ex.ex); // it's in the accumulator
+            int offset = (ex.var.vdec.position + 1) * -8;
+            genRegOff("movl", accum, offset, fp, "get l var");
+        } 
         else {
             // this is where normal happens
             genArithmetic(ex.ce);
@@ -158,7 +167,22 @@ public class Generator {
                 // this is where normal happens
                 genArithmetic(ce.e1);
             }
-            else {}
+            else {
+                // comparisons!
+                genArithmetic(ce.e1);
+                genReg("push", accumq, "push L to stack");
+                genArithmetic(ce.e2);
+                genRegOff("cmpl", accum, 0, sp, "compare");
+                String l1 = getLabel();
+                genRelOpJump(ce.rel, l1);
+                genImmReg("movl", "0", accum, "put 0");
+                String l2 = getLabel();
+                genDir("jmp", l2, "jump through");
+                genLabelMark(l1);
+                genImmReg("movl", "1", accum, "put 1");
+                genLabelMark(l2);
+                genImmReg("addq", "8", sp, "pop the L value");
+            }
         }
         if (en.kind == TreeNode.E) {
             ENode e = (ENode) en;
@@ -218,7 +242,7 @@ public class Generator {
         if (fact.readToken != null) {}
         else if (fact.fc != null) {}
         else if (fact.ex != null) {}
-        else if (fact.var != null) {}
+        else if (fact.var != null) genVariableRef(fact.var);
         else if (fact.lit != null) genLiteral(fact.lit);
         else
             System.out.println("Something's wrong (Generator)");
@@ -232,11 +256,36 @@ public class Generator {
             // put the string in the place
         }
     }
+    
+    private void genVariableRef(Variable v) {
+        if (v.type.equals("int") && v.vdec.depth == 0) {
+            // globals here
+        }
+        else if (v.type.equals("int")) {
+            int offset = (v.vdec.position + 1) * -8;
+            genOffReg("movl", offset, fp, accum, "get a variable");
+        }
+    }
 
     private String getLabel() {
         String label = String.format(".L%d", labelNum);
         labelNum++;
         return label;
+    }
+
+    public void genRelOpJump(RelOp r, String label) {
+        if (r.token.kind == Token.T_LESS)
+            genDir("jl", label, "less than");
+        if (r.token.kind == Token.T_LESSEQ)
+            genDir("jle", label, "less than or equal");
+        if (r.token.kind == Token.T_EQ)
+            genDir("je", label, "equal");
+        if (r.token.kind == Token.T_NEQ)
+            genDir("jne", label, "not equal");
+        if (r.token.kind == Token.T_GRTR)
+            genDir("jg", label, "greater than");
+        if (r.token.kind == Token.T_GRTREQ)
+            genDir("jge", label, "greater than or equal");
     }
 
     // formatting functions

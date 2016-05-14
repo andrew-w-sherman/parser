@@ -24,12 +24,14 @@ public class Generator {
 
     public void generate(DeclarationList root) {
         this.root = root;
-        makeHeaders();
+        preprocess();
+        standardHeaders();
         Declaration dec = root.head;
         while (dec != null) {
             if (dec.fd != null) {
                 dec.fd.markVariablesFunc();
                 genCodeFunctionDec(dec.fd);
+                out.println("");
             }
             // global vars are declared already
             dec = dec.next;
@@ -38,14 +40,28 @@ public class Generator {
         out.close();
     }
 
-    private void makeHeaders() {
-        // for now, let's just have number writing stuff
+    private void preprocess() {
+        // print those var headers
+        Declaration dec = root.head;
+        while (dec != null) {
+            int size;
+            if (dec.vd != null) {
+                if (dec.vd.isArray) size = dec.vd.size;
+                else size = 1;
+                genComm(dec.vd.name.value, size);
+            }
+            dec = dec.next;
+        }
+        // do strlits?
+    }
+
+    private void standardHeaders() {
+        // print section rodata
         out.println(".section .rodata");
         out.println(".WriteIntString: .string \"%d\"");
         out.println(".WritelnString: .string \"\\n\"");
         out.println(".WriteStringString: .string \"%s\"");
         out.println(".ReadIntString: .string \"%d\"");
-        // here we'll also need to take care of globals, str lits, etc.
         out.println("");
         out.println(".text");
         out.println(".globl main");
@@ -53,7 +69,10 @@ public class Generator {
     }
 
     private void genCodeFunctionDec(FunctionDeclaration f) {
-        out.println(f.name.value + ":");
+        if (f.name.value.equals("main"))
+            out.println(f.name.value + ":");
+        else
+            out.println("F" + f.name.value + ":");
         genRegReg("movq", sp, fp, "setup fp");
         int numLoc = f.maxPos;
         // allocate locals
@@ -126,7 +145,6 @@ public class Generator {
                 //label for first statement
                 genLabelMark(l1);
             }
-            
         }
         else if (sn.kind == TreeNode.WHILE_STMT) {
             WhileStatement ws = (WhileStatement) sn;
@@ -160,11 +178,18 @@ public class Generator {
     private void genCodeExpression(Expression ex) {
         if (ex.ex != null) {
             // this is where assignment happens
-            genCodeExpression(ex.ex); // it's in the accumulator
-            if (ex.var.declaration.depth == 0) System.out.println(
-                    "no globals yet");
-            else
+            if (ex.var.declaration.depth == 0) {
+                genImmReg("movq", "V" + ex.var.declaration.name.value,
+                        accumq, "get l var (global)");
+                genReg("push", accumq, "push global to stack");
+                genCodeExpression(ex.ex); // it's in the accumulator
+                genReg("pop", tempq, "push global to stack");
+                genRegOff("movl", accum, 0, tempq, "put in value");
+            }
+            else {
+                genCodeExpression(ex.ex); // it's in the accumulator
                 genRegOff("movl", accum, offsetOf(ex.var), fp, "get l var");
+            }
         } 
         else {
             // this is where normal happens
@@ -274,9 +299,12 @@ public class Generator {
     private void genVariableRef(Variable v) {
         if (v.type.equals("int") && v.declaration.depth == 0) {
             // globals here
+            genImmReg("movq", "V" + v.declaration.name.value,
+                    accumq, "get a global variable");
+            genOffReg("movl", 0, accumq, accum, "move thing");
         }
         else if (v.type.equals("int")) {
-            genOffReg("movl", offsetOf(v), fp, accum, "get a param variable");
+            genOffReg("movl", offsetOf(v), fp, accum, "get a variable");
         }
     }
 
@@ -298,7 +326,10 @@ public class Generator {
         if (fc.args.al == null) numArgs = 0;
         else numArgs = pushArgs(fc.args.al.head);
         genReg("push", fp, "push the frame pointer");
-        genDir("call", fc.name.value, "call function");
+        if (fc.name.value.equals("main"))
+            genDir("call", fc.name.value, "call function");
+        else
+            genDir("call", "F" + fc.name.value, "call function");
         genReg("pop", fp, "restore the frame pointer");
         // pop the arguments
         genImmReg("addq", (numArgs * 8) + "", sp, "pop args");
@@ -365,6 +396,12 @@ public class Generator {
                 opcode, label, r2, "", comment);
     }
 
+    public void genRegDir(String opcode, String r1, String label,
+            String comment) {
+        out.printf("\t %4s %4s, %4s %10s #%s\n",
+                opcode, r1, label, "", comment);
+    }
+
     // single operand
     public void genReg(String opcode, String reg, String comment) {
         out.printf("\t %4s %4s %10s #%s\n", opcode, reg, "", comment);
@@ -394,6 +431,10 @@ public class Generator {
 
     public void genLabelMark(String label) {
         out.printf("%s:\n", label);
+    }
+
+    public void genComm(String name, int size) {
+        out.printf(".comm %6s, %2s\n", "V" + name, size * 8);
     }
 
     // register name constants

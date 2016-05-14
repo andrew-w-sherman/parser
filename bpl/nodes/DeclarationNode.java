@@ -16,6 +16,6 @@ public abstract class DeclarationNode extends TreeNode {
     public boolean isFunDec = false;
     public Parameters params = null;
 
-    public int depth;
-    public int position; 
+    public int depth = 0;
+    public int position = 0; 
 }
